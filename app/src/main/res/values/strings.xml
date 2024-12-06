@@ -3,4 +3,6 @@
     <string name="enter_your_message">Enter your message</string>
     <string name="send_message">Send Message</string>
     <string name="typo">Typo</string>
+    <string name="save">Save</string>
+    <string name="enter_the_ip_address">Enter the IP Address</string>
 </resources>

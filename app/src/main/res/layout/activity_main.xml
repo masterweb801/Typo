@@ -11,7 +11,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/txtLabel"
@@ -23,7 +24,39 @@
             android:textSize="36sp"
             android:textColor="@color/top_label"
             android:textStyle="bold"
-            android:layout_gravity="center" />  <!-- android:fontFamily="@font/your_custom_font"-->
+            android:layout_gravity="center" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edtIpAddress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:autofillHints=""
+                android:background="@drawable/edittext_background"
+                android:hint="@string/enter_the_ip_address"
+                android:inputType="text"
+                android:minHeight="48dp"
+                android:padding="12dp"
+                android:textColor="#333333"
+                android:textColorHint="#757575"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save"
+                android:textColor="#fff"
+                android:backgroundTint="#356f42"
+                android:padding="12dp" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/edtMessage"
@@ -48,7 +81,7 @@
             android:layout_height="wrap_content"
             android:text="@string/send_message"
             android:textColor="#fff"
-            android:backgroundTint="#6200EE"
+            android:backgroundTint="#356f42"
             android:layout_gravity="bottom"
             android:padding="16dp"
             android:textSize="18sp" />
