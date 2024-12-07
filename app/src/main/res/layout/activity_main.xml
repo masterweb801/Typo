@@ -41,7 +41,7 @@
                 android:autofillHints=""
                 android:background="@drawable/edittext_background"
                 android:hint="@string/enter_the_ip_address"
-                android:inputType="text"
+                android:inputType="textUri"
                 android:minHeight="48dp"
                 android:padding="12dp"
                 android:textColor="#333333"

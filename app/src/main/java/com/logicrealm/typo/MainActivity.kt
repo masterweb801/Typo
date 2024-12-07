@@ -1,23 +1,29 @@
 package com.logicrealm.typo
 
 import android.os.Bundle
+import android.view.inputmethod.EditorInfo
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
-import okhttp3.*
+import okhttp3.Call
+import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
 import java.io.IOException
-import android.view.inputmethod.EditorInfo
-import android.widget.TextView
+import android.content.Context
 
 class MainActivity : AppCompatActivity() {
     private lateinit var edtMessage: EditText
     private lateinit var btnSend: Button
+    private lateinit var edtIpAddress: EditText
     private lateinit var btnSave: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,22 +38,47 @@ class MainActivity : AppCompatActivity() {
 
         edtMessage = findViewById(R.id.edtMessage)
         btnSend = findViewById(R.id.btnSend)
+        edtIpAddress = findViewById(R.id.edtIpAddress)
         btnSave = findViewById(R.id.btnSave)
 
-        btnSend.setOnClickListener {
-            val message = edtMessage.text.toString()
-            if (message.isNotEmpty()) {
-                sendPostRequest(message)
+        val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        val savedIp = sharedPreferences.getString("ip_address", "")
+        edtIpAddress.setText(savedIp)
+
+        btnSave.setOnClickListener {
+            val ip = edtIpAddress.text.toString().trim()
+            if (ip.isNotEmpty()) {
+                val editor = sharedPreferences.edit()
+                editor.putString("ip_address", ip)
+                editor.apply()
+                Toast.makeText(this, "IP Address saved", Toast.LENGTH_SHORT).show()
             } else {
+                Toast.makeText(this, "Please enter a valid IP Address", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        btnSend.setOnClickListener {
+            val message = edtMessage.text.toString().trim()
+            val ip = edtIpAddress.text.toString().trim()
+            if (message.isNotEmpty() && ip.isNotEmpty()) {
+                sendPostRequest(message, ip)
+            } else if (message.isEmpty()) {
                 Toast.makeText(this, "Please enter a message", Toast.LENGTH_SHORT).show()
+            } else if (ip.isEmpty()) {
+                Toast.makeText(this, "Please enter IP Address", Toast.LENGTH_SHORT).show()
             }
         }
 
         edtMessage.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val message = edtMessage.text.toString().trim()
-                if (message.isNotEmpty()) {
-                    sendPostRequest(message)
+                val ip = edtIpAddress.text.toString().trim()
+                if (message.isNotEmpty() && ip.isNotEmpty()) {
+                    sendPostRequest(message, ip)
+                } else if (message.isEmpty()) {
+                    Toast.makeText(this, "Please enter a message", Toast.LENGTH_SHORT).show()
+                } else if (ip.isEmpty()) {
+                    Toast.makeText(this, "Please enter IP Address", Toast.LENGTH_SHORT).show()
                 }
                 return@OnEditorActionListener true
             }
@@ -55,8 +86,8 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun sendPostRequest(message: String) {
-        val url = "http://192.168.0.103:6969/send_message"
+    private fun sendPostRequest(message: String, ip: String) {
+        val url = "http://$ip:6969/send_message"
         val client = OkHttpClient()
 
         val json = """{"message": "$message"}"""
