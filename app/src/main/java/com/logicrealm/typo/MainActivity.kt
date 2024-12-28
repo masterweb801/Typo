@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 
         edtMessage.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                val message = edtMessage.text.toString().trim()
+                val message = edtMessage.text.toString()
                 val ip = edtIpAddress.text.toString().trim()
                 if (message.isNotEmpty() && ip.isNotEmpty()) {
                     sendPostRequest(message, ip)
