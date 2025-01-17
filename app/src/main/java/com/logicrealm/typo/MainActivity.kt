@@ -19,18 +19,26 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import java.io.IOException
 import android.content.Context
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.graphics.Rect
+import android.view.ViewGroup
 
 class MainActivity : AppCompatActivity() {
     private lateinit var edtMessage: EditText
     private lateinit var btnSend: Button
     private lateinit var edtIpAddress: EditText
     private lateinit var btnSave: Button
+    private lateinit var btnReturn: ImageButton
+    private lateinit var rootLayout: LinearLayout
+    private lateinit var buttonsLayout: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        rootLayout = findViewById(R.id.main)
+        ViewCompat.setOnApplyWindowInsetsListener(rootLayout) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
@@ -40,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         btnSend = findViewById(R.id.btnSend)
         edtIpAddress = findViewById(R.id.edtIpAddress)
         btnSave = findViewById(R.id.btnSave)
+        btnReturn = findViewById(R.id.btnReturn)
 
         val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         val savedIp = sharedPreferences.getString("ip_address", "")
@@ -58,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnSend.setOnClickListener {
-            val message = edtMessage.text.toString().trim()
+            val message = edtMessage.text.toString()
             val ip = edtIpAddress.text.toString().trim()
             if (message.isNotEmpty() && ip.isNotEmpty()) {
                 sendPostRequest(message, ip)
@@ -69,6 +78,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        btnReturn.setOnClickListener {
+            val ip = edtIpAddress.text.toString().trim()
+            if (ip.isNotEmpty()) {
+                sendPostRequest("<-RETURN->", ip)
+            }
+        }
+
+
+        edtMessage.requestFocus()
         edtMessage.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val message = edtMessage.text.toString()
@@ -84,6 +102,31 @@ class MainActivity : AppCompatActivity() {
             }
             false
         })
+
+        buttonsLayout = findViewById(R.id.buttonsLayout)
+
+        rootLayout.viewTreeObserver.addOnGlobalLayoutListener {
+            val rect = Rect()
+            rootLayout.getWindowVisibleDisplayFrame(rect)
+            val screenHeight = rootLayout.rootView.height
+            val keypadHeight = screenHeight - rect.bottom
+
+            if (keypadHeight > screenHeight * 0.15) {
+                val params = buttonsLayout.layoutParams as LinearLayout.LayoutParams
+                params.bottomMargin = keypadHeight - 150
+                buttonsLayout.layoutParams = params
+                val params2 = edtMessage.layoutParams as ViewGroup.MarginLayoutParams
+                params2.bottomMargin = 10
+                edtMessage.layoutParams = params2
+            } else {
+                val params = buttonsLayout.layoutParams as LinearLayout.LayoutParams
+                params.bottomMargin = 0
+                buttonsLayout.layoutParams = params
+                val params2 = edtMessage.layoutParams as ViewGroup.MarginLayoutParams
+                params2.bottomMargin = 30
+                edtMessage.layoutParams = params2
+            }
+        }
     }
 
     private fun sendPostRequest(message: String, ip: String) {
