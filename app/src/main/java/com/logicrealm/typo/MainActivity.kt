@@ -18,11 +18,13 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import java.io.IOException
-import android.content.Context
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.graphics.Rect
 import android.view.ViewGroup
+import androidx.core.content.edit
+import com.logicrealm.typo.utils.NetworkScanner
+import io.github.cdimascio.dotenv.dotenv
 
 class MainActivity : AppCompatActivity() {
     private lateinit var edtMessage: EditText
@@ -32,6 +34,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnReturn: ImageButton
     private lateinit var rootLayout: LinearLayout
     private lateinit var buttonsLayout: LinearLayout
+    private lateinit var btnConnect: Button
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,20 +53,48 @@ class MainActivity : AppCompatActivity() {
         edtIpAddress = findViewById(R.id.edtIpAddress)
         btnSave = findViewById(R.id.btnSave)
         btnReturn = findViewById(R.id.btnReturn)
+        btnConnect = findViewById(R.id.btnCon)
 
-        val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE)
         val savedIp = sharedPreferences.getString("ip_address", "")
         edtIpAddress.setText(savedIp)
+
+        val dotenv = dotenv {
+            directory = "./assets"
+            filename = "env"
+        }
+        val port = dotenv["PORT"]?.toIntOrNull()?:throw IllegalArgumentException("PORT is missing or malformed in .env file. App cannot start.")
+
+        val subnet = NetworkScanner.getLocalSubnet()
+        if (subnet !== null && !savedIp.isNullOrEmpty()) {
+            val connected = NetworkScanner.isPortOpen(savedIp, port)
+            if (!connected) {
+                Toast.makeText(this, "This IP Address is offline!", Toast.LENGTH_SHORT).show()
+            }
+        } else if (subnet==null) {
+            Toast.makeText(this, "No internet connection!", Toast.LENGTH_SHORT).show()
+        }
 
         btnSave.setOnClickListener {
             val ip = edtIpAddress.text.toString().trim()
             if (ip.isNotEmpty()) {
-                val editor = sharedPreferences.edit()
-                editor.putString("ip_address", ip)
-                editor.apply()
+                sharedPreferences.edit {
+                    putString("ip_address", ip)
+                }
                 Toast.makeText(this, "IP Address saved", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "Please enter a valid IP Address", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        btnConnect.setOnClickListener {
+            if (subnet !== null) {
+                val connectedHost = NetworkScanner.scanLocalNetwork(subnet, port)?.firstOrNull()
+                if (connectedHost !== null) {
+                    edtIpAddress.setText(connectedHost)
+                }
+            } else {
+                Toast.makeText(this, "No internet connection!", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -70,7 +102,7 @@ class MainActivity : AppCompatActivity() {
             val message = edtMessage.text.toString()
             val ip = edtIpAddress.text.toString().trim()
             if (message.isNotEmpty() && ip.isNotEmpty()) {
-                sendPostRequest(message, ip)
+                sendPostRequest(message, ip, port.toString())
             } else if (message.isEmpty()) {
                 Toast.makeText(this, "Please enter a message", Toast.LENGTH_SHORT).show()
             } else if (ip.isEmpty()) {
@@ -81,7 +113,7 @@ class MainActivity : AppCompatActivity() {
         btnReturn.setOnClickListener {
             val ip = edtIpAddress.text.toString().trim()
             if (ip.isNotEmpty()) {
-                sendPostRequest("<-RETURN->", ip)
+                sendPostRequest("<-RETURN->", ip, port.toString())
             }
         }
 
@@ -92,7 +124,7 @@ class MainActivity : AppCompatActivity() {
                 val message = edtMessage.text.toString()
                 val ip = edtIpAddress.text.toString().trim()
                 if (message.isNotEmpty() && ip.isNotEmpty()) {
-                    sendPostRequest(message, ip)
+                    sendPostRequest(message, ip, port.toString())
                 } else if (message.isEmpty()) {
                     Toast.makeText(this, "Please enter a message", Toast.LENGTH_SHORT).show()
                 } else if (ip.isEmpty()) {
@@ -129,8 +161,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendPostRequest(message: String, ip: String) {
-        val url = "http://$ip:6969/send_message"
+    private fun sendPostRequest(message: String, ip: String, port: String) {
+        val url = "http://$ip:$port/send_message"
         val client = OkHttpClient()
 
         val json = """{"message": "$message"}"""
