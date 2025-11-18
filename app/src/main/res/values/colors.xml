@@ -3,4 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="top_label">#333333</color>
+    <color name="ni_label">#fff</color>
+    <color name="ni_cont">#333</color>
+    <color name="main_cont">#f5f5f5</color>
 </resources>

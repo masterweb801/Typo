@@ -25,6 +25,12 @@ import android.view.ViewGroup
 import androidx.core.content.edit
 import com.logicrealm.typo.utils.NetworkScanner
 import io.github.cdimascio.dotenv.dotenv
+import android.view.View
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var edtMessage: EditText
@@ -35,6 +41,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rootLayout: LinearLayout
     private lateinit var buttonsLayout: LinearLayout
     private lateinit var btnConnect: Button
+    private lateinit var btnBkSpace: ImageButton
+    private lateinit var niLayout: LinearLayout
+    private lateinit var mainLayout: LinearLayout
+    private lateinit var btnRefresh: Button
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,12 +58,18 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        niLayout = findViewById(R.id.niLayout)
+        mainLayout = findViewById(R.id.mainLayout)
+
         edtMessage = findViewById(R.id.edtMessage)
         btnSend = findViewById(R.id.btnSend)
         edtIpAddress = findViewById(R.id.edtIpAddress)
         btnSave = findViewById(R.id.btnSave)
         btnReturn = findViewById(R.id.btnReturn)
         btnConnect = findViewById(R.id.btnCon)
+        btnBkSpace = findViewById(R.id.btnBkSpace)
+        btnRefresh = findViewById(R.id.btnRefresh)
+
 
         val sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE)
         val savedIp = sharedPreferences.getString("ip_address", "")
@@ -64,15 +80,12 @@ class MainActivity : AppCompatActivity() {
             filename = "env"
         }
         val port = dotenv["PORT"]?.toIntOrNull()?:throw IllegalArgumentException("PORT is missing or malformed in .env file. App cannot start.")
+        val auth = dotenv["SECRET"] ?:throw IllegalArgumentException("SECRET is missing or malformed in .env file. App cannot start.")
 
-        val subnet = NetworkScanner.getLocalSubnet()
-        if (subnet !== null && !savedIp.isNullOrEmpty()) {
-            val connected = NetworkScanner.isPortOpen(savedIp, port)
-            if (!connected) {
-                Toast.makeText(this, "This IP Address is offline!", Toast.LENGTH_SHORT).show()
-            }
-        } else if (subnet==null) {
-            Toast.makeText(this, "No internet connection!", Toast.LENGTH_SHORT).show()
+        checkConnectivity()
+
+        btnRefresh.setOnClickListener {
+            checkConnectivity()
         }
 
         btnSave.setOnClickListener {
@@ -87,14 +100,24 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        val subnet = NetworkScanner.getLocalSubnet()
+
         btnConnect.setOnClickListener {
-            if (subnet !== null) {
-                val connectedHost = NetworkScanner.scanLocalNetwork(subnet, port)?.firstOrNull()
-                if (connectedHost !== null) {
-                    edtIpAddress.setText(connectedHost)
+            lifecycleScope.launch(Dispatchers.IO) {
+                if (subnet !== null) {
+                    val connectedHost = NetworkScanner.scanLocalNetwork(subnet, port)?.firstOrNull()
+                    withContext(Dispatchers.Main) {
+                        if (connectedHost !== null) {
+                            edtIpAddress.setText(connectedHost)
+                        } else {
+                            Toast.makeText(this@MainActivity, "No device found!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivity, "No internet connection!", Toast.LENGTH_SHORT).show()
+                    }
                 }
-            } else {
-                Toast.makeText(this, "No internet connection!", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -102,7 +125,7 @@ class MainActivity : AppCompatActivity() {
             val message = edtMessage.text.toString()
             val ip = edtIpAddress.text.toString().trim()
             if (message.isNotEmpty() && ip.isNotEmpty()) {
-                sendPostRequest(message, ip, port.toString())
+                sendPostRequest(message, ip, port.toString(), auth)
             } else if (message.isEmpty()) {
                 Toast.makeText(this, "Please enter a message", Toast.LENGTH_SHORT).show()
             } else if (ip.isEmpty()) {
@@ -113,7 +136,14 @@ class MainActivity : AppCompatActivity() {
         btnReturn.setOnClickListener {
             val ip = edtIpAddress.text.toString().trim()
             if (ip.isNotEmpty()) {
-                sendPostRequest("<-RETURN->", ip, port.toString())
+                sendPostRequest("<-RETURN->", ip, port.toString(), auth)
+            }
+        }
+
+         btnBkSpace.setOnClickListener {
+            val ip = edtIpAddress.text.toString().trim()
+            if (ip.isNotEmpty()) {
+                sendPostRequest("<-BACKSPACE->", ip, port.toString(), auth)
             }
         }
 
@@ -124,7 +154,7 @@ class MainActivity : AppCompatActivity() {
                 val message = edtMessage.text.toString()
                 val ip = edtIpAddress.text.toString().trim()
                 if (message.isNotEmpty() && ip.isNotEmpty()) {
-                    sendPostRequest(message, ip, port.toString())
+                    sendPostRequest(message, ip, port.toString(), auth)
                 } else if (message.isEmpty()) {
                     Toast.makeText(this, "Please enter a message", Toast.LENGTH_SHORT).show()
                 } else if (ip.isEmpty()) {
@@ -161,11 +191,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendPostRequest(message: String, ip: String, port: String) {
+    private fun checkConnectivity() {
+        if (NetworkScanner.isDeviceOnline(this)) {
+            mainLayout.visibility = View.VISIBLE
+            niLayout.visibility = View.GONE
+        } else {
+            mainLayout.visibility = View.GONE
+            niLayout.visibility = View.VISIBLE
+        }
+    }
+
+    private fun sendPostRequest(message: String, ip: String, port: String, auth: String) {
         val url = "http://$ip:$port/send_message"
         val client = OkHttpClient()
 
-        val json = """{"message": "$message"}"""
+        val json = """{"message": "$message", "auth": "$auth"}"""
 
         val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
         val requestBody = json.toRequestBody(mediaType)
@@ -185,7 +225,6 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
                     runOnUiThread {
-                        Toast.makeText(applicationContext, "Message Sent Successfully", Toast.LENGTH_SHORT).show()
                         edtMessage.text.clear()
                     }
                 } else {

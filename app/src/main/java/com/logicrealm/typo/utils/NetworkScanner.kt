@@ -5,6 +5,9 @@ import java.net.InetSocketAddress
 import java.net.NetworkInterface
 import java.net.Socket
 import kotlin.concurrent.thread
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 
 object NetworkScanner {
     fun getLocalSubnet(): String? {
@@ -56,4 +59,15 @@ object NetworkScanner {
         threads.forEach { it.join() }
         return openHosts
     }
+
+    fun isDeviceOnline(context: Context): Boolean {
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+
+        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+               capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+    }
+
 }

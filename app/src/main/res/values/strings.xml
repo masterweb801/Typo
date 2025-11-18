@@ -7,4 +7,8 @@
     <string name="enter_the_ip_address">Enter the IP Address</string>
     <string name="enter">Enter</string>
     <string name="connect_nearby">Connect Nearby</string>
+    <string name="check_internet">Please Check Your Internet!</string>
+    <string name="no_wifi_icon">No Wifi Icon</string>
+    <string name="backspace">Backspace</string>
+    <string name="refresh">Refresh</string>
 </resources>

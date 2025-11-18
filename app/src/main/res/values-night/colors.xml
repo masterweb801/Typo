@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="top_label">#FFFFFF</color>
+    <color name="ni_label">#000</color>
+    <color name="ni_cont">#f5f5f5</color>
+    <color name="main_cont">#121212</color>
 </resources>

@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.logicrealm.typo"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.logicrealm.typo"
@@ -50,4 +50,5 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
     implementation(libs.dotenv.kotlin)
+    implementation(libs.kotlinx.coroutines.android)
 }
