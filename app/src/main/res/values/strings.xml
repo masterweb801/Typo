@@ -11,4 +11,6 @@
     <string name="no_wifi_icon">No Wifi Icon</string>
     <string name="backspace">Backspace</string>
     <string name="refresh">Refresh</string>
+    <string name="cmd">CMD</string>
+    <string name="screenshot">Screenshot</string>
 </resources>

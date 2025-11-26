@@ -5,25 +5,71 @@
     android:layout_width="330dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:layout_marginBottom="16dp"
+    android:layout_marginBottom="30dp"
     android:orientation="horizontal"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:baselineAligned="false">
 
-    <Button
-        android:id="@+id/btnSend"
-        style="?android:attr/buttonBarButtonStyle"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="15dp"
-        android:text="@string/send_message"
-        android:textColor="#fff"
-        android:backgroundTint="#00796B"
-        android:layout_gravity="center"
-        android:hapticFeedbackEnabled="true"
-        android:elevation="4dp"
-        android:layout_marginEnd="8dp"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginEnd="8dp"
+        android:gravity="center_vertical">
+
+        <Button
+            android:id="@+id/btnSend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00796B"
+            android:elevation="4dp"
+            android:hapticFeedbackEnabled="true"
+            android:paddingVertical="12dp"
+            android:text="@string/send_message"
+            android:textColor="#fff" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:paddingHorizontal="10dp">
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="0.4"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="#304FFE"
+                android:contentDescription="@string/screenshot"
+                android:elevation="2dp"
+                android:hapticFeedbackEnabled="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/ss_icon"
+                android:textColor="#fff"
+                app:tint="@color/white" />
+
+            <ImageButton
+                android:id="@+id/btnCMD"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.4"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="#AA00FF"
+                android:contentDescription="@string/cmd"
+                android:elevation="2dp"
+                android:hapticFeedbackEnabled="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/cmd"
+                android:textColor="#fff"
+                app:tint="@color/white" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
