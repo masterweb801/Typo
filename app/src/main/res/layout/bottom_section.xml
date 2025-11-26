@@ -27,7 +27,8 @@
             android:hapticFeedbackEnabled="true"
             android:paddingVertical="12dp"
             android:text="@string/send_message"
-            android:textColor="#fff" />
+            android:textColor="#fff"
+            android:layout_marginBottom="4dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
