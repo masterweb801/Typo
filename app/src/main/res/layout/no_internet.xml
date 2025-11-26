@@ -7,14 +7,14 @@
     android:orientation="vertical"
     android:layout_gravity="center"
     android:layout_marginHorizontal="25dp"
+    android:paddingHorizontal="30dp"
     android:paddingVertical="50dp"
-    android:background="@drawable/rounded_corner"
-    >
+    android:background="@drawable/rounded_corner">
 
     <ImageView
         android:id="@+id/niIcon"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginBottom="20dp"
         android:contentDescription="@string/no_wifi_icon"
         android:src="@drawable/no_wifi" />
@@ -28,7 +28,7 @@
         android:gravity="center"
         android:text="@string/check_internet"
         android:textColor="@color/ni_label"
-        android:textSize="36sp"
+        android:textSize="24sp"
         android:textStyle="bold" />
 
     <Button
@@ -38,9 +38,8 @@
         android:text="@string/refresh"
         android:textColor="#fff"
         android:backgroundTint="#006064"
-        android:paddingHorizontal="24dp"
-        android:paddingVertical="12dp"
-        android:textSize="18sp"
-        />
+        android:paddingHorizontal="30dp"
+        android:paddingVertical="9dp"
+        android:textSize="16sp" />
 
 </LinearLayout>

@@ -28,7 +28,7 @@ object NetworkScanner {
         return null
     }
 
-    fun isPortOpen(ip: String, port: Int, timeout: Int = 200): Boolean {
+    fun isPortOpen(ip: String, port: Int, timeout: Int = 400): Boolean {
         return try {
             Socket().use { socket ->
                 socket.connect(InetSocketAddress(ip, port), timeout)
@@ -40,7 +40,7 @@ object NetworkScanner {
         }
     }
 
-    fun scanLocalNetwork(subnet: String, port: Int): List<String>? {
+    fun scanLocalNetwork(subnet: String, port: Int): List<String> {
         val openHosts = mutableListOf<String>()
         val threads = mutableListOf<Thread>()
 

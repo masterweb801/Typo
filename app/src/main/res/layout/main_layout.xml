@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:id="@+id/mainLayout"
+    android:layout_width="350dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingHorizontal="8dp"
+    android:weightSum="1"
+    android:gravity="center"
+    android:layout_gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/txtLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:text="@string/typo"
+        android:textSize="36sp"
+        android:textColor="@color/top_label"
+        android:textStyle="bold"
+        android:layout_gravity="center" />
+
+    <include layout="@layout/connect_section" />
+
+    <EditText
+        android:id="@+id/edtMessage"
+        android:imeOptions="actionDone"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:autofillHints=""
+        android:hint="@string/enter_your_message"
+        android:inputType="textMultiLine"
+        android:ellipsize="none"
+        android:gravity="top|start"
+        android:background="@drawable/edittext_background"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:textColorHint="#757575"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"
+        android:scrollbars="vertical" />
+
+    <include layout="@layout/bottom_section" />
+
+</LinearLayout>

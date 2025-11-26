@@ -1,156 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    tools:context=".MainActivity"
     android:background="@color/main_cont"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="horizontal"
+    tools:context=".MainActivity">
 
-        <LinearLayout
-            android:id="@+id/mainLayout"
-            android:layout_width="350dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingHorizontal="8dp"
-            android:weightSum="1"
-            android:gravity="center">
+    <include layout="@layout/main_layout" />
 
-            <TextView
-                android:id="@+id/txtLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:gravity="center"
-                android:text="@string/typo"
-                android:textSize="36sp"
-                android:textColor="@color/top_label"
-                android:textStyle="bold"
-                android:layout_gravity="center" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/edtIpAddress"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:autofillHints=""
-                    android:background="@drawable/edittext_background"
-                    android:hint="@string/enter_the_ip_address"
-                    android:inputType="textUri"
-                    android:minHeight="48dp"
-                    android:padding="12dp"
-                    android:textColor="#333333"
-                    android:textColorHint="#757575"
-                    android:textSize="16sp" />
-
-                <Button
-                    android:id="@+id/btnSave"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/save"
-                    android:textColor="#fff"
-                    android:backgroundTint="#4F08F2"
-                    android:padding="12dp" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btnCon"
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:text="@string/connect_nearby"
-                android:layout_marginBottom="14dp"
-                android:textColor="#fff"
-                android:backgroundTint="#827717"
-                android:padding="12dp" />
-
-            <EditText
-                android:id="@+id/edtMessage"
-                android:imeOptions="actionDone"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.8"
-                android:autofillHints=""
-                android:hint="@string/enter_your_message"
-                android:inputType="textMultiLine"
-                android:ellipsize="none"
-                android:gravity="top|start"
-                android:background="@drawable/edittext_background"
-                android:textColor="#333333"
-                android:textSize="16sp"
-                android:textColorHint="#757575"
-                android:padding="12dp"
-                android:layout_marginBottom="16dp"
-                android:scrollbars="vertical" />
-
-            <LinearLayout
-                android:id="@+id/buttonsLayout"
-                style="?android:attr/buttonBarStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btnSend"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="80dp"
-                    android:text="@string/send_message"
-                    android:textColor="#fff"
-                    android:backgroundTint="#00796B"
-                    android:layout_gravity="center"
-                    android:textSize="20sp"
-                    android:elevation="4dp"
-                    android:layout_marginEnd="8dp"/>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <ImageButton
-                        android:id="@+id/btnBkSpace"
-                        android:layout_width="96dp"
-                        android:layout_height="48dp"
-                        android:background="@drawable/rounded_button"
-                        android:backgroundTint="#388E3C"
-                        android:contentDescription="@string/backspace"
-                        android:elevation="2dp"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/backspace"
-                        android:textColor="#fff"
-                        app:tint="@color/white"
-                        android:layout_marginBottom="8dp"/>
-
-                    <ImageButton
-                        android:id="@+id/btnReturn"
-                        android:layout_width="96dp"
-                        android:layout_height="48dp"
-                        android:backgroundTint="#E53935"
-                        android:contentDescription="@string/enter"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/ic_enter"
-                        android:background="@drawable/rounded_button"
-                        android:textColor="#fff"
-                        android:paddingVertical="6dp"
-                        app:tint="@color/white"
-                        android:elevation="2dp"/>
-
-                </LinearLayout>
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <include layout="@layout/no_internet" />
+    <include layout="@layout/no_internet" android:visibility="gone" />
 
 </LinearLayout>

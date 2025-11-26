@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/buttonsLayout"
+    style="?android:attr/buttonBarStyle"
+    android:layout_width="330dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginBottom="16dp"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Button
+        android:id="@+id/btnSend"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="15dp"
+        android:text="@string/send_message"
+        android:textColor="#fff"
+        android:backgroundTint="#00796B"
+        android:layout_gravity="center"
+        android:hapticFeedbackEnabled="true"
+        android:elevation="4dp"
+        android:layout_marginEnd="8dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/btnBkSpace"
+            android:layout_width="81dp"
+            android:layout_height="48dp"
+            android:background="@drawable/rounded_button"
+            android:contentDescription="@string/backspace"
+            android:backgroundTint="#E53935"
+            android:elevation="2dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/backspace"
+            android:textColor="#fff"
+            android:hapticFeedbackEnabled="true"
+            app:tint="@color/white"
+            android:layout_marginBottom="8dp"
+            />
+
+        <ImageButton
+            android:id="@+id/btnReturn"
+            android:layout_width="81dp"
+            android:layout_height="48dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="#558B2F"
+            android:contentDescription="@string/enter"
+            android:elevation="2dp"
+            android:hapticFeedbackEnabled="true"
+            android:paddingVertical="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/enter"
+            android:textColor="#fff"
+            app:tint="@color/white" />
+
+    </LinearLayout>
+</LinearLayout>

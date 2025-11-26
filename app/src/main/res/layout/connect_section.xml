@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="4dp"
+        android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/edtIpAddress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:autofillHints=""
+                    android:background="@drawable/edittext_background"
+                    android:hint="@string/enter_the_ip_address"
+                    android:inputType="textUri"
+                    android:minHeight="48dp"
+                    android:padding="12dp"
+                    android:textColor="#333333"
+                    android:textColorHint="#757575"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btnSave"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save"
+                    android:textColor="#fff"
+                    android:backgroundTint="#4F08F2"
+                    android:padding="12dp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnCon"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/connect_nearby"
+                android:layout_marginBottom="10dp"
+                android:textColor="#fff"
+                android:backgroundTint="#827717"
+                android:padding="12dp" />
+
+</LinearLayout>

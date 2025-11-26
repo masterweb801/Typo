@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
 
         niLayout = findViewById(R.id.niLayout)
         mainLayout = findViewById(R.id.mainLayout)
+        buttonsLayout = findViewById(R.id.buttonsLayout)
 
         edtMessage = findViewById(R.id.edtMessage)
         btnSend = findViewById(R.id.btnSend)
@@ -88,6 +89,8 @@ class MainActivity : AppCompatActivity() {
             checkConnectivity()
         }
 
+        val subnet = NetworkScanner.getLocalSubnet()
+
         btnSave.setOnClickListener {
             val ip = edtIpAddress.text.toString().trim()
             if (ip.isNotEmpty()) {
@@ -100,15 +103,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val subnet = NetworkScanner.getLocalSubnet()
-
         btnConnect.setOnClickListener {
             lifecycleScope.launch(Dispatchers.IO) {
                 if (subnet !== null) {
-                    val connectedHost = NetworkScanner.scanLocalNetwork(subnet, port)?.firstOrNull()
+                    val connectedHost = NetworkScanner.scanLocalNetwork(subnet, port).firstOrNull()
                     withContext(Dispatchers.Main) {
                         if (connectedHost !== null) {
                             edtIpAddress.setText(connectedHost)
+                            Toast.makeText(this@MainActivity, "Remote device found!", Toast.LENGTH_SHORT).show()
                         } else {
                             Toast.makeText(this@MainActivity, "No device found!", Toast.LENGTH_SHORT).show()
                         }
@@ -165,8 +167,6 @@ class MainActivity : AppCompatActivity() {
             false
         })
 
-        buttonsLayout = findViewById(R.id.buttonsLayout)
-
         rootLayout.viewTreeObserver.addOnGlobalLayoutListener {
             val rect = Rect()
             rootLayout.getWindowVisibleDisplayFrame(rect)
@@ -175,7 +175,7 @@ class MainActivity : AppCompatActivity() {
 
             if (keypadHeight > screenHeight * 0.15) {
                 val params = buttonsLayout.layoutParams as LinearLayout.LayoutParams
-                params.bottomMargin = keypadHeight - 150
+                params.bottomMargin = keypadHeight - 120
                 buttonsLayout.layoutParams = params
                 val params2 = edtMessage.layoutParams as ViewGroup.MarginLayoutParams
                 params2.bottomMargin = 10
