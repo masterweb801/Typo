@@ -149,8 +149,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
-        edtMessage.requestFocus()
         edtMessage.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val message = edtMessage.text.toString()
@@ -174,19 +172,13 @@ class MainActivity : AppCompatActivity() {
             val keypadHeight = screenHeight - rect.bottom
 
             if (keypadHeight > screenHeight * 0.15) {
-                val params = buttonsLayout.layoutParams as LinearLayout.LayoutParams
-                params.bottomMargin = keypadHeight - 120
-                buttonsLayout.layoutParams = params
-                val params2 = edtMessage.layoutParams as ViewGroup.MarginLayoutParams
-                params2.bottomMargin = 10
-                edtMessage.layoutParams = params2
+                val params = edtMessage.layoutParams as ViewGroup.LayoutParams
+                params.height = 175
+                edtMessage.layoutParams = params
             } else {
-                val params = buttonsLayout.layoutParams as LinearLayout.LayoutParams
-                params.bottomMargin = 0
-                buttonsLayout.layoutParams = params
-                val params2 = edtMessage.layoutParams as ViewGroup.MarginLayoutParams
-                params2.bottomMargin = 30
-                edtMessage.layoutParams = params2
+                val params = edtMessage.layoutParams as ViewGroup.LayoutParams
+                params.height = 525
+                edtMessage.layoutParams = params
             }
         }
     }
